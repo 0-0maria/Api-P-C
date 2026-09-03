@@ -14,3 +14,21 @@ def create_product(db: Session, product: ProductCreate):
     db.commit()
     db.refresh(new_product)
     return new_product
+
+def update_product(db: Session, product_id: int, product_data: ProductCreate):
+    db_product = get_product(db, product_id)
+    if not db_product:
+        return None
+    for key, value in product_data.model_dump().items():
+        setattr(db_product, key, value)
+    db.commit()
+    db.refresh(db_product)
+    return db_product
+
+def delete_product(db: Session, product_id: int):
+    db_product = get_product(db, product_id)
+    if not db_product:
+        return None
+    db.delete(db_product)
+    db.commit()
+    return db_product

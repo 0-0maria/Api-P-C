@@ -17,3 +17,21 @@ def create_category(db: Session, category: CategoryCreate):
     db.commit()
     db.refresh(new_category)
     return new_category
+
+def update_category(db: Session, category_id: int, category_data: CategoryCreate):
+    db_category = get_category(db, category_id)
+    if not db_category:
+        return None
+    db_category.nombre = category_data.nombre
+    db_category.estado = category_data.estado
+    db.commit()
+    db.refresh(db_category)
+    return db_category
+
+def delete_category(db: Session, category_id: int):
+    db_category = get_category(db, category_id)
+    if not db_category:
+        return None
+    db.delete(db_category)
+    db.commit()
+    return db_category
